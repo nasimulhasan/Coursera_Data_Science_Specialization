@@ -1,0 +1,130 @@
+Regression Models Project
+=========================
+
+Synopsis 
+========
+The purpose of this project is to find out which transmission is better for miles per gallon, and quantify the difference of the mpg between automatic and manual transmissions.
+
+Data processing
+===============
+
+Exploratory data analysis
+=========================
+
+- Load the data and perform exploratory data analysis.
+```{r expo, cache=TRUE, echo=TRUE, results='hide'}
+data(mtcars);dim(mtcars)
+names(mtcars)
+
+#plot 
+library(lattice)
+mpg.wt.am <- qplot(wt, mpg, data = mtcars, col = am,
+                   main = "wt ~ mpg colored by am")
+
+#mean of the mpg for automatic and manual transmission
+meanMPG <- tapply(mtcars$mpg, mtcars$am, mean)
+manual <- 24.39231 
+automatic <- 17.14737
+meanDiff <- manual - automatic
+
+#t test
+test <- t.test(mpg ~ am, data = mtcars)
+test
+```
+
+A primary / rough decision can be made from the plot, difference of mean, and t.test that miles per gallon (mpg) will inreases to 7.245 miles/gallon if transmission is passing from automatic (am = 0) to manual (am = 1)
+
+Fit multiple model
+==================
+
+Fit multiple linear regression models and select the model using  backward elimination.
+```{r model, cache=TRUE, echo=TRUE, results='hide'}
+#fit a model using mpg as outcome and am as predictor
+model.mpg.am <- lm(mpg ~ am, data = mtcars)
+
+#fit a model using mpg as outcome and all other variables as predictors.
+model.wild <- lm(mpg ~ ., data = mtcars)
+summary(model.wild)
+#model selection using backward elimination
+backElim <- step(model.wild, , direction = "backward")
+summ.coef <- summary(backElim)$coef
+
+#fit the final model
+model.fit <- lm(mpg ~ wt + qsec + am, data = mtcars)
+summary(model.fit)
+```
+
+Residual diagnostics
+====================
+
+plot the residuals of the model (see Supporting appendix part) and perform some diagnostics
+```{r res, cache=TRUE, echo=TRUE, results='hide'}
+res <- resid(model.fit)
+fit <- fitted(model.fit)
+```
+
+Uncertainty ~ Inference
+=======================
+
+Confidence interval of the model
+```{r ci, cache=TRUE, echo=TRUE, results='hide'}
+conInt <- confint(model.fit)
+```
+
+Results / summary
+=================
+
+```{r ttest, cache=TRUE, echo=FALSE, results='hide'}
+test
+```
+
+- Confidence interval:
+```{r, cache=TRUE, echo=FALSE}
+conInt
+```
+
+- Coefficients of the fitted model
+```{r summ, cache=TRUE, echo=FALSE}
+summary(model.fit)$coef
+```
+
+
+```{r RFM, cache=TRUE, echo=FALSE, results='hide'}
+summary(model.fit)$resid
+```
+- Multiple R-squared:  0.85
+- Manual transmission is better than automatic transmission for MPG.
+
+Supporting appendix
+===================
+- plot mtcars data
+
+```{r fig.width=7, fig.height=4.5, cache=TRUE, echo=FALSE}
+mpg.wt.am                  
+```
+
+- plot the histogram of the fitted model and residuals of the model
+
+``` {r fig.width = 9, cache=TRUE, echo=FALSE}
+par(mfrow = c(1, 2))
+hFit <- hist(fit, col = "blue",
+             xlab = "fitted model", 
+             main = "Final model")
+
+hRes <- hist(res, col = "blue",
+             xlab = "Residuals",
+             main = "Residuals of the model")
+```
+
+
+```{r fig.width=4, fig.height=4, cache=TRUE, echo=FALSE}
+
+```
+
+- plot the model selection using backward elimination
+
+```{r fig.width=9, fig.height=10, cache=TRUE, echo=FALSE}
+par(mfrow = c(2, 2))
+plotBackElim <- plot(backElim)
+```
+

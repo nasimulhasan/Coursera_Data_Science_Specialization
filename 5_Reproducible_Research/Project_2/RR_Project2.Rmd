@@ -1,0 +1,250 @@
+Analysis of harmful events with respect to population health and economic consequences
+========================================================
+
+Synopsis 
+========
+In this project we use  the NOAA Storm Database to answer two basic questoins. The weather events in the database start in the year 1950 and end in November 2011. The first goal of the project is to answer which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health.The second goal is to answer which types of events have the greatest economic consequences Across the United States. In order to answer the questions we need to subset the database which only include the required attribute of the database. And then perform a bunch of operations to end up with specific answers. The complete analysis is divided into a couple of parts such as Data Processing, Results and Figures.
+
+Data Processing
+===============
+
+1. set up directory
+2. load the data (i.e read.csv())
+3. perform elementary data analysis on the data set
+4. create the data frame including the required / useful columns
+5. filter the data frame based on specific columns
+6. check the dimension, head and summary of the data frame
+7. for question #1 grouped the data using event, sum up injuries and fatalities, and sort the total injuries in decreasing order.
+8. for question #2 grouped the data using event, sum up property damage and crop damage, and sort the both damage in decreasing order.
+9. create new data frame (economic consequence) using property and crop damage.
+
+```{r setoptions, cache=TRUE, echo = TRUE}
+#setup directory
+setwd("F:/Data Science/5. Reproducible Research/Week3/Project2")
+getwd()
+
+## special note: 
+#due to slow speed of my computer, I fail to load the 
+# the (StromData.csv) on .Rmd file. I load the (StromData.csv) file on
+# the R command line, perform the operations below (write as comments #like - #dim(data), #[1] 1773320      37), and reshape the data set. #Then I create two data frame and write them to seperate CSV file such as  (dfEFI1.csv and dfPC1.csv) #for both #the question #1 and question #2 respectively. Next, I load #the both files and perform the necessary operations (uncommented r code on .Rmd file) to find out the #answer of the questions:
+
+#Below are the comment out code which I run on command line:
+
+#load the dataset
+
+# data <- read.csv("StormData.csv", quote = '')
+
+#dimension of the data set
+
+#dim(data)
+
+#[1] 1773320      37
+
+#column names
+
+#colnames(data)
+
+#event types
+
+#unique(data$X.EVTYPE.)
+
+#subsetting the data set 
+
+#event <- data[, 8]
+
+#fatalities <- data[, 23]
+
+#injuries <- data[, 24]
+
+
+#convert the data item
+
+#event <- as.character(event)
+
+#fatalities <- as.numeric(as.character(fatalities, na.rm = T))
+
+#injuries <- as.numeric(as.character(injuries, na.rm = T))
+
+#create the data frame
+
+#dfEFI <- data.frame(event, fatalities, injuries)
+
+#filter the data frame based on injuries column
+
+#dfEFI <- dfEFI[dfEFI$injuries > 0, ]
+
+#filter the data frame based on injuries column
+
+#dfEFI <- dfEFI[dfEFI$fatalities > 0, ]
+
+#dimension of the data set
+
+#dim(dfEFI)
+
+#[1] 873682      3
+
+#head and summary of the data frame
+
+#head(dfEFI)
+
+#summary(dfEFI)
+
+#write.csv(dfEFI, file = "dfEFI1.csv", row.names = F)
+
+#load the data set for question #1
+dfEFI1 <- read.csv("dfEFI1.csv")
+dim(dfEFI1)
+head(dfEFI1)
+
+# sum up injuries grouped by event using tapply function
+totalInjuries <- tapply(as.numeric(dfEFI1$injuries), as.character(dfEFI1$event), sum, na.rm = T)
+
+dim(totalInjuries)
+
+# sort the result in decreasing order
+harmfulEvent <- sort(totalInjuries, decreasing=T)
+
+#create the data frame of the harmful events wrt population health
+DFharmfulEvent <- data.frame(harmfulEvent)
+dim(DFharmfulEvent)
+summary(DFharmfulEvent)
+
+# operation regrading to the question #2
+
+# propertyDamage <- data[, 25]
+
+# propertyDamageExp <- data[, 26]
+
+# cropDamage <- data[, 27]
+
+# cropDamageExp <- data[, 28]
+
+# 
+
+# event <- as.character(event)
+
+# propertyDamage <- as.numeric(as.character(propertyDamage, na.rm = T))
+
+# propertyDamageExp <- as.numeric(as.character(propertyDamageExp))
+
+# cropDamage <- as.numeric(as.character(cropDamage, na.rm =T))
+
+# cropDamageExp <- as.numeric(as.character(cropDamageExp))
+
+#
+# dfPC <- data.frame(event, propertyDamage, propertyDamageExp, cropDamage, cropDamageExp)
+
+# dim(dfPC)
+
+#[1] 1773320       5
+
+# dfPC <- dfPC[dfPC$propertyDamage > 0, ]
+
+# dfPC <- dfPC[dfPC$cropDamage > 0, ]
+
+#dim(dfPC)
+
+#[1] 887211      5
+
+#write the filter out data for question #2
+
+#write.csv(dfPC, file = "dfPC1.csv", row.names = F)
+
+#load the modified data for the question #2
+dfPC1 <- read.csv("dfPC1.csv")
+dim(dfPC1)
+
+#sum up the property damage grouped by event using tapply function 
+totalPropertyDamage <- tapply(as.numeric(dfPC1$propertyDamage), as.character(dfPC1$event), sum, na.rm = T)
+
+# sort the result in decreasing order
+totalPropertyDamage <- sort(totalPropertyDamage, decreasing=T)
+
+#create new data frame
+totalPropertyDamage <- data.frame(totalPropertyDamage)
+dim(totalPropertyDamage)
+summary(totalPropertyDamage)
+
+#sum up the crop damage grouped by event using tapply function
+totalCropDamage <- tapply(as.numeric(dfPC1$cropDamage), as.character(dfPC1$event), sum, na.rm = T)
+
+# sort the result in decreasing order
+totalCropDamage <- sort(totalCropDamage, decreasing=T)
+
+#create new data frame
+totalCropDamage <- data.frame(totalCropDamage)
+dim(totalCropDamage)
+summary(totalCropDamage)
+
+#create the new data frame
+economicConsequences <- data.frame(totalPropertyDamage, totalCropDamage)
+dim(economicConsequences)
+
+# Most harmful wrt population health
+head(DFharmfulEvent)
+
+#Most harmful wrt economic consequence - Property
+head(totalPropertyDamage)
+
+#Most harmful wrt economic consequence - Crop
+head(totalCropDamage)
+```
+
+Results
+=======
+1. Events which are harmful with respect to population health.
+2. Events which have the greatest economic consequences
+
+```{r, cache=TRUE}
+# harmful wrt population health
+DFharmfulEvent
+
+#greatest economic consequences (Property and Crop)
+economicConsequences
+```
+
+Figures
+=======
+In X-axis of the figures represent the total damages or harms due to weather events and Y-axis represent the event frequency. That is X-axis values represent the total harms corresponding to each events (Y-axis values).
+
+1. Figure for events which are harmful with respect to population health
+2. Figure for events which have the greatest economic consequences
+
+```{r, cache=TRUE}
+#load the ggplot2
+library(ggplot2)
+
+#plot using qplot()
+qplot(harmfulEvent, bandwidth = 2,
+      xlab = "Total for each harmful event corresponding to injuries",
+      ylab = "Event type frequency",
+      main ="F-1: Harmful with respect to population health")
+```
+
+- From figure F-1 it says that the total harms with respect to population health lies below 1000 for most of the event types.
+
+```{r, cache=TRUE}
+#load ggplot2
+library(ggplot2)
+
+#plot using qplot()
+qplot(economicConsequences$totalPropertyDamage, bandwidth = 2,       
+      data = economicConsequences,
+      xlab = "Total for each harmful event corresponding to property",
+      ylab = "Event type frequency",
+      main ="F-2: Greatest economic consequences (Property)")
+
+qplot(economicConsequences$totalCropDamage, bandwidth = 2,    
+      data = economicConsequences,
+      xlab = "Total for each harmful event corresponding to crop",
+      ylab = "Event type frequency",
+      main ="F-3: Greatest economic consequences (Crop)")
+```
+
+- From figure F-2 it says that the total harms with respect to Property damage (economic consequence) lies below 1000 for most of the event types.
+
+- From figure F-3 it says that the total harms with respect to Crop damage (economic consequence) lies below 1000 for most of the event types.
+
+Special Note:
+=============
+due to slow speed of my computer, I fail to load the (StromData.csv) on .Rmd file. I load the (StromData.csv) file on the R command line, perform the operations below (write as comments like - #dim(data), #[1] 1773320      37), and reshape the data set. Then I create two data frame and write them to seperate CSV file such as  (dfEFI1.csv and dfPC1.csv) for both the question #1 and question #2 respectively. Next, I load the both files and perform the necessary operations (uncommented r code on .Rmd file) to find out the answer of the questions:

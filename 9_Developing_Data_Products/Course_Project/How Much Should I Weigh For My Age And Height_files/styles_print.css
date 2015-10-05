@@ -1,0 +1,252 @@
+
+
+
+@media print {
+@page { margin:1.5cm; padding:0;background-color:#fff;}
+body, hr {background-color:#fff;}
+div#header_ad.advert,
+div.toolbox, 
+div.print_info,
+h2.footer_datebox_prev, hr.home_review, body.headlines div.main_content p.archive {display:none;}
+div#print_message {display:block; page-break-inside:avoid;}
+#footer, div#rating_top, div#rating_bottom, .addthis_info_bottom, .article_print, #mask, .non_print {display:none !important;}
+body.headlines .main_content h2 {margin-top:20px;}
+.ie9 div.logo a, .ie9 div.logo a:hover{
+background-image:none;
+-ms-filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/structure/images/logo/logo_10yrs_180x120.png',sizingMethod='scale')";}
+
+hr.menu_top.non_print {
+margin-top:0;}
+
+.main_content .article_body a:visited { color:#0164c8 !important;}
+div.detail_main, div.detail_sub {
+float:left;
+width:100%;
+display:block;
+clear:left;
+margin:0;
+padding:7px 0 6px 0;
+text-indent:28px;
+background:#444 url("/structure/images/icons/icon_sprite.png") 3px -278px no-repeat;
+background-size:23px 1500px;
+border:none;}
+
+div.detail_sub {
+height:12px;
+padding:6px 0 8px 0;
+border-top:1px solid #c5c5c5;
+background:#ccc url("/structure/images/icons/icon_sprite.png") /*4px for center */ 4px -140px no-repeat;
+background-size:23px 1500px;}
+
+hr.non_print, hr.print { /* remove border/bg to render invisible */
+margin-top:15px;
+border-bottom:none;
+background:#fdfdfd;}
+
+}
+
+
+@media screen {
+html { margin:20px;padding:0;}
+div#header_ad.advert { margin-top:5px; margin-bottom:0px;}
+div.print_info {display:block}
+div#print_message {display:none;}
+div#print-pre div#print_message {display:block;}
+#print_info p { font-weight:400; line-height:1.6em; margin:20px 0 0 0;}
+}
+
+@media all and (max-width:490px) {
+.header { height:45px;}	
+}
+
+@media all {
+div.container { /* ditch all container padding */
+padding-left:0px; padding-right:0px; clear:both;}
+
+div.eightcol.main_content { /* full-width main content */
+width:100%;
+margin-left:0px;
+margin-right:0px;
+margin-bottom:-18px;
+padding-left:0px;
+padding-right:10px}
+
+.sidebar,
+article_opinions { /* ditch the sidebar */
+display:none;}
+
+body:before {top:-1000px;} /* remove the drop shadow */
+/* set print header */
+.header { /*style the header */
+padding:10px;
+border:1px solid #042849;
+background:#1e5799 !important;
+-webkit-print-color-adjust:exact; }
+
+div.logo { margin:5px 20px 5px 10px; min-height:56px;} /* space the logo */
+
+div.logo a, div.logo a:hover {
+margin:0;}
+
+div.header_message,
+.social_container,
+#searchwrapper,
+div#navdiv,
+#article_ad_1,
+#article_ad_3,
+#sidebar_ad_1,
+#sidebar_ad_2,
+#comic,
+div#footer,
+#article_opinions,
+.addthis_toolbox, .heading_right div.toolbox, div#rating_bottom, div#social_bottom { /* hide on print*/
+position:absolute; 
+overflow:hidden; 
+clip:rect(0 0 0 0); 
+height:1px; width:1px; 
+margin:-1px; padding:0; border:0;  }
+
+hr.menu { position:relative; top:-1px; }
+hr.menu_top {display:none;}
+
+/***** headlines pages *****/
+ul.writtens-top li.featured a:visited, /* home-top */
+ul.writtens-top li.featured_fresh a:visited,
+ul.writtens-top li.choice a:visited,
+ul.writtens-top li.choice_fresh a:visited,
+ul.writtens-bottom li.featured a:visited, /* home-bottom */
+ul.writtens-bottom li.choice a:visited,
+ul.category_list li a:visited, /* category listings */
+ul.popular li.release a:visited, /* popular */
+ul.popular li.featured a:visited,
+ul.popular li.choice a:visited,
+ul.category li.release a:visited,
+ul.category li.choice a:visited,
+ul.category li.featured a:visited,
+ul.archive li.release a:visited, /* archive */
+ul.archive li.featured a:visited {
+color:#222 !important;}
+
+ul.writtens-top li.featured a:hover, /* home-top */
+ul.writtens-top li.featured_fresh a:hover,
+ul.writtens-top li.choice a:hover,
+ul.writtens-top li.choice_fresh a:hover,
+ul.writtens-bottom li.featured a:hover,  /* home-bottom */
+ul.writtens-bottom li.choice a:hover,
+ul.category_list li a:hover, /* category listings */
+ul.popular li.release a:hover, /* popular */
+ul.popular li.featured a:hover,
+ul.popular li.choice a:hover,
+ul.category li.release a:hover,
+ul.category li.choice a:hover,
+ul.category li.featured a:hover,
+ul.archive li.release a:hover, /* archive */
+ul.archive li.featured a:hover {
+color:#222 !important;
+background-color:#fff !important;
+text-decoration:none;}	
+
+.about {padding-top:0;height:45px;}
+
+ul.featured li a div headline {font-size:1.5em;margin-top:5px;}
+
+ul.featured li a img, ul.featured li a img.original {width:80px;}
+
+body.article .main_content h1 {margin-top:20px;}
+
+ul.default_article {margin-top:15px;}
+
+div.sixcol.headlines_calendar {display:none;}
+
+ul.writtens-top li{ page-break-inside:avoid;}
+
+/* articles pages */
+
+body.article h1 {
+margin-top:35px;
+margin-bottom:-5px;
+padding-bottom:0;
+font-size:1.9em;}
+
+body.preview.article h1 {
+margin-bottom:20px; !important}
+
+h1 span.star_featured {
+background-position:-3px -45px; !important}
+
+h1 span.star_choice {
+background-position:-3px -45px; !important}
+
+.star_featured, .star_choice, .star_knowledge {
+padding:0 4px 0 0 !important;}
+
+div.robots-nocontent,
+div.nonprint,
+div.video_frame,
+#message,
+div#article_opinions{
+display:none !important;}
+
+#article_tabs div.list-wrap,
+#info_tabs div.list-wrap {
+padding:10px 20px 10px 10px;
+max-height:100%;}
+
+div#article_tabs .nav li,
+div#info_tabs .nav li {
+width:100%;
+page-break-inside:avoid;}
+
+div#article_tabs li.nav-tab a,
+div#info_tabs li.nav-tab a {
+display:none;}
+
+div#article_tabs li.nav-tab a.current,
+div#info_tabs li.nav-tab a.current {
+display:block;}
+
+div#article_tabs div.list-wrap ul#references,
+div#article_tabs div.list-wrap ul#additional,
+div#article_tabs div.list-wrap ul#citations,
+div#info_tabs div.list-wrap ul#sources,
+div#info_tabs div.list-wrap ul#useful { /* breakout additional info tabs! */
+display:block;}
+
+#popular_tabs ul#tab1, 
+#popular_tabs ul#tab2,
+#popular_tabs ul#tab3,
+#popular_tabs ul#more,
+#article_tabs ul#additional, 
+#article_tabs ul#references,
+#article_tabs ul#citations,
+#info_tabs ul#sources,
+#info_tabs ul#useful {
+padding:0 0 0 0; margin:0 0 0 0 !important;}
+/* Footer */
+
+div#print_message {/* print footer for non-article pages*/
+/* print footer for "print-friendly" pages is in baseline*/
+padding:16px 16px 0 16px;
+margin:30px 0 20px 0;
+border:1px solid #e5e5e5;
+background:#f9f9f9;}
+
+div#print_message p,
+div#print_message a {
+font-size:0.9em;
+color:#313131;
+text-align:center;}
+
+div#print_message a {
+font-size:1em;}
+
+div#print_message hr {
+width:90%;
+margin:0 auto 18px auto;
+border-bottom:1px solid #ccc;
+background:none;}
+
+}
+
+
+

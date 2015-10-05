@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Project Presentation</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Project Presentation">
+  <meta name="author" content="Mohamed Taufeeq">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Project Presentation</h1>
+    <h2>Developing Data Products</h2>
+    <p>Mohamed Taufeeq<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Ideal Body Weight (IBW)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>To determine how much you should weigh (your ideal body weight) several factors should be considered, including age, muscle-fat ratio, height, sex, and bone density. </p>
+
+<p>This app will help you to detemine your IBW using the three standard approaches.</p>
+
+<h1>Body Mass Index (BMI) </h1>
+
+<p>Your BMI is your weight in relation to your height. </p>
+
+<pre><code class="r">weight &lt;- 80
+height &lt;- 1.8
+BMI &lt;- weight/(height^2)
+if (BMI &gt;= 18.5 &amp;&amp; BMI &lt;= 25) {
+    print(&quot;Your weight is ideal&quot;)
+}
+</code></pre>
+
+<pre><code>## [1] &quot;Your weight is ideal&quot;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h1>Waist-Hip Ratio (WHR) </h1>
+  </hgroup>
+  <article data-timings="">
+    <p>A waist-hip measurement is the ratio of the circumference of your waist to that of your hips.</p>
+
+<pre><code class="r">waist &lt;- 28
+hip &lt;- 36
+WHR &lt;- waist/hip
+WHR
+</code></pre>
+
+<pre><code>## [1] 0.7778
+</code></pre>
+
+<h1>Waist-to-Height Ratio</h1>
+
+<pre><code class="r">waist &lt;- 91
+height &lt;- 183
+if (waist &lt;= (height/2)) {
+    print(&quot;This can help you to increase your life expectancy.&quot;)
+}
+</code></pre>
+
+<pre><code>## [1] &quot;This can help you to increase your life expectancy.&quot;
+</code></pre>
+
+<pre><code class="r">if (waist &gt; (height/2)) {
+    print(&quot;Your WHtR is not ideal.&quot;)
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>ui.R chunk</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Below is the code snippet of the ui.R</p>
+
+<pre><code class="r">library(shiny)
+
+shinyUI(pageWithSidebar(
+
+        headerPanel(&quot;Ideal body weight&quot;),
+
+        sidebarPanel(                
+                h3(&#39;Body Mass Index(BMI)&#39;),
+                p(&#39;Your BMI is your weight in relation to your height.&#39;),
+
+                numericInput(
+                        &#39;weight&#39;,
+                        &#39;Weight in kilogram(kg)&#39;,
+                        0,
+                        min = NA,
+                        max = NA,
+                        step = NA
+                ),
+
+                numericInput(
+                        &#39;height&#39;,
+                        &#39;Height in centi-meter(cm)&#39;,
+                        0,
+                        min = NA,
+                        max = NA,
+                        step = NA),
+
+                submitButton(&#39;Your BMI&#39;)
+                ),
+        mainPanel(
+                h3(&#39;Result of BMI Measurement&#39;),
+
+                h4(&#39;Your weight in kg&#39;),
+                p(&#39;Example: 95&#39;),
+                verbatimTextOutput(&quot;weight&quot;)
+                )
+        ))
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>server.R chunk</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Here the code snippet of the server.R</p>
+
+<pre><code class="r">shinyServer(function(input, output) {
+    output$weight &lt;- renderPrint({
+        input$weight
+    })
+    output$height &lt;- renderPrint({
+        input$height
+    })
+    output$height1 &lt;- renderPrint({
+        input$height1
+    })
+    output$waist &lt;- renderPrint({
+        input$waist
+    })
+    output$waist1 &lt;- renderPrint({
+        input$waist1
+    })
+    output$hip &lt;- renderPrint({
+        input$hip
+    })
+
+    # call required function
+    output$BMI &lt;- renderPrint({
+        BMI(input$weight, input$height)
+    })
+    output$WHR &lt;- renderPrint({
+        WHR(input$waist, input$hip)
+    })
+    output$WHtR &lt;- renderPrint({
+        WHtR(input$waist1, input$height1)
+    })
+})
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Ideal Body Weight (IBW)'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Waist-Hip Ratio (WHR) '>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='ui.R chunk'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='server.R chunk'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

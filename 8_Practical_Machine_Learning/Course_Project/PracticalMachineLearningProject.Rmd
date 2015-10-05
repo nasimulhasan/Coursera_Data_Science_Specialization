@@ -1,0 +1,210 @@
+Qualitative Activity Recognition
+================================
+
+Synopsis 
+========
+The goal of your project is to predict the manner. The training data for this project are pml-training.csv available here:  https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv and the test data are 
+pml-testing.csv available here: https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv. The data for this project come from this source: http://groupware.les.inf.puc-rio.br/har.
+
+Data Preprocessing
+==================
+1. Set up the working directory.
+
+2. Load the training and testing data, and perform elementary data analysis.
+
+3. Preprocess the data, and extract the useful feature. For this purpose, select the columns which have most of the entry are NA and blank, and filter out the training and test data set and build the validate data set that use to train the model.At this phase, perform the elementary data analysis on newly build training data set.
+
+4. For implementing Machine Learning algorithm load the "caret" package.
+
+5. Partition the tidy training data using "createDataPartition()" function and perform basic operations.
+
+6. Now find out the less useful or useless predictor from the tidy training data set, and update the training data set.
+
+7. Fit a model on the training data set i.e apply "train()" function where method is random forest algorithm (mehtod = "rf"). In order to speed up the execution trControl parameter of the "train" function is used.
+
+8. Print the fitted model and check out the accuracy of the model.
+
+9. Predict the classe of each instance of the reshaped test data set by using "prediction" function of the caret package.
+
+10. estimate out of sample error appropriately with cross-validation
+
+11. write up the predicted character vector to the ".txt" files
+
+```{r dir, cache=TRUE, echo = TRUE}
+#setup directory
+setwd("F:/Data Science/8. Pratical Machine Learning/Week3/Assessment/Project")
+getwd()
+```
+
+Load the data set and check the dimension
+```{r load, cache=TRUE, echo=TRUE}
+#load the data set and check the dimension
+trainRawData <- read.csv("pml-training.csv", na.strings=c("NA",""))
+dim(trainRawData)
+```
+
+To eliminate the columns where most of the entry are NA values find out the NAs, build a new data set , and check out the dimension.
+```{r NA elimination, echo=TRUE, cache=TRUE}
+#discard NA
+NAs2 <- apply(trainRawData, 2, 
+             function(x) { sum(is.na(x))})
+
+#build new training data set
+validData2 <- trainRawData[, which(NAs2 == 0)]
+dim(validData2)
+```
+
+Load the "caret" package, partition the training data set, get the training data, and check the dimension and View the data set.
+```{r partition, cache=TRUE, echo=TRUE}
+#make trianing set
+library(caret)
+training <- createDataPartition(y = validData2$classe,
+                                p = 0.7,
+                                list = FALSE)
+trainData <- validData2[training, ]
+dim(trainData)
+
+testValidateData <- validData2[-training, ]
+dim(testValidateData)
+```
+
+Take a manual look up over the data set and discard the useless predictors. Then, we are ready to use the training data to train the model.
+```{r useless, cache=TRUE, echo=TRUE}
+#discard useless predictors
+removeIndex <- grep("timestamp|X|user_name|new_window",names(trainData))
+
+trainingData <- trainData[,-removeIndex]
+dim(trainingData)
+
+testValidateData <- testValidateData[, -removeIndex]
+dim(testValidateData)
+
+# plot features
+total <- which(grepl("^total", 
+                 colnames(trainingData), 
+                 ignore.case = F))
+
+totalAccel <- trainingData[, total]
+
+featurePlot(x = totalAccel,
+            y = trainingData$classe,            
+            pch = 19,
+            main = "Feature plot",            
+            plot = "pairs")
+```
+
+Build the prediction model using the training data where "classe" is the outcome and other features are as predictors, method is random forest ("rf"), and the remaining parameter is "trControl".
+```{r model, cache=TRUE, echo=TRUE}
+#train control
+trControl <- trainControl(method = "cv", number = 4)
+
+#build model
+modelFit.rf <- train(trainingData$classe ~., 
+                        method = "rf",
+                        trControl = trControl,
+                        trainingData)
+
+summary(modelFit.rf)
+modelFit.rf$finalModel
+```
+
+Reshape the test data set i.e discarding the column with where most of the entry are NA and useless predictors.
+```{r testData, cache=TRUE, echo=TRUE}
+#load the testing data set
+testRawData <- read.csv("pml-testing.csv", na.strings=c("NA",""))
+dim(testRawData)
+
+#discard NA
+NAs <- apply(testRawData, 2, 
+             function(x) { sum(is.na(x))})
+
+validDataT <- testRawData[, which(NAs == 0)]
+dim(validDataT)
+
+#discard useless predictors
+removeIndex <- grep("timestamp|X|user_name|new_window",names(validDataT))
+
+testData <- validDataT[,-removeIndex]
+dim(testData)
+```
+
+Apply the machine learning model to the test data set, and get the predictions.
+```{r predictions, cache=TRUE, echo=TRUE}
+model.predict <- predict(modelFit.rf, testData)
+model.predict
+summary(model.predict)
+#create a character vector of the predictions and check #the length of the vector
+model.predict <- c(as.character(model.predict))
+#length of the predicted vector
+length(model.predict)
+model.predict
+```
+
+Results
+=======
+Designed machine learning algorithm:
+```{r algo, cache=TRUE, echo=TRUE}
+library(caret)
+# Result of the random forest model
+print(modelFit.rf, digits = 3)
+
+# plot the random forest model
+plot(modelFit.rf, 
+    log = "y",
+    lwd = 2,
+    main = "Random forest accuracy",
+    xlab = "Predictors",
+    ylab = "Accuracy"
+    )
+
+```
+
+Predictions:
+```{r predicted, cache=TRUE, echo=TRUE}
+# Result of the prediction
+library(caret)
+model.predict
+```
+
+Out of sample error
+===================
+
+In sample error rate is 0.4% (1 - 1-.996 = 0.004 * 100).
+
+Estimate out of sample error 
+```{r, cache=TRUE, echo=TRUE}
+dim(testValidateData)
+
+#predict on testValidateData
+predictions <- predict(modelFit.rf, testValidateData)
+#length of the predictions
+length(predictions)
+
+#true accuracy of the predicted model
+outOfSampleError.accuracy <- sum(predictions == testValidateData$classe) / length(predictions)
+
+outOfSampleError.accuracy
+
+#out of sample error and percentage of out of sample error
+outOfSampleError <- 1 - outOfSampleError.accuracy
+outOfSampleError
+e <- outOfSampleError * 100
+paste0("Out of sample error estimation: ", round(e, digits = 2), "%")
+```
+
+Write up
+========
+
+Write up the predicted character to the ".txt" files
+```{r writeUp, cache=TRUE, echo=TRUE}
+#write up
+pml_write_files = function(x){
+        n = length(x)
+        for(i in 1:n){
+                filename = paste0("problem_id_",i,".txt")
+                write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+        }
+}
+
+pml_write_files(model.predict)
+```

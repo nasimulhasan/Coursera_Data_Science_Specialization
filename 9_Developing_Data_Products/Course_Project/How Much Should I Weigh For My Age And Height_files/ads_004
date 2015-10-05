@@ -1,0 +1,59 @@
+{
+
+var google_ads = new Array();
+var google_ad;
+var google_radlinks = new Array();
+var google_radlink;
+var google_info = new Object();
+google_ad = {}; 
+google_ad.n = 1; 
+google_ad.type = "text"; 
+google_ad.bidtype = "CPC"; 
+google_ad.targeting_type = "contextual"; 
+google_ad.url = "http://googleads.g.doubleclick.net/aclk?sa=L&amp;ai=CQNew4bCbU83TGM2muATk8YCIBNKVyKsFmqqI-pwBwI23ARABILGK9QEoA1C9_-Ho-v____8BYDPIAQGoAwGqBK4BT9BsdjWAiZz7IVk_uG7cewFLrdVwz9VwMiU8MArQxlYahtnccSAfu41ZnvWbw_iNKzI7u7S887eNkzLO1LucnYkyJbtbTOPzljBX33g5j8bFESpKPT2KE2xAo9XtRYzo-hkSMTRWVVSs0zhtEVE2NreOD_pLzqUJYsn3AWCQJrfNdK_-b4jMSoTk7-BLCP_lt2MKSEN50dT5iVtTUS9UY_XqURK9FphRhRlnlyaPgAfU18UT&amp;num=1&amp;sig=AOD64_3eYdry5Qs0DGWwDsdkYmIVhDWdCw&amp;client=ca-pub-1971793357249522&amp;adurl=http://www.alibaba.com/premium/weigh_scales.html%3Fuptime%3D20140416%26ptsid%3D1012000052696534%26crea%3D42049232594%26plac%3Dwww.medicalnewstoday.com%26netw%3Dd%26device%3Dc%26ptscode%3D0120202030010001"; 
+google_ad.visible_url = "www.alibaba.com/Weigh-Scales"; 
+google_ad.log_info = "BYuLx4bCbU83TGM2muATk8YCIBACaqoj6nAEAABABOAHIAQGoE4AB";
+google_ad.activeview_js_immediate_enabled = "true";
+google_ad.line1 = "Weigh Scales Wholesale"; 
+google_ad.line2 = "Find Quality Products from Verified"; 
+google_ad.line3 = "Suppliers. Get a Live Quote Now!"; 
+google_ad.regionname = ""; 
+google_ads[0] = google_ad; 
+google_ad = {}; 
+google_ad.n = 2; 
+google_ad.type = "text"; 
+google_ad.bidtype = "CPC"; 
+google_ad.targeting_type = "contextual"; 
+google_ad.url = "http://googleads.g.doubleclick.net/aclk?sa=L&amp;ai=Cm2xq4bCbU83TGM2muATk8YCIBP2L6osCpYTm_CnAjbcBEAIgsYr1ASgDUL7D9pIEYDPIAQGoAwGqBK4BT9AcFDiAipz7IVk_uG7cewFLrdVwz9VwMiU8MArQxlYahtnccSAfu41ZnvWbw_iNKzI7u7S887eNkzLO1LucnYkyJbtbTOPzljBX33g5j8bFESpKPT2KE2xAo9XtRYzo-hkSMTRWVVSs0zhtEVE2NreOD_pLzqUJYsn3AWCQWde0cq_-b4jMSoTk7-BLCP_lt2MKSEN50dT5iVtTUS9UY_XqURK9FphRhRlE9W6NgAe3yPUV&amp;num=2&amp;sig=AOD64_1RIJOytQT8Zho71caNH_jILUbAQw&amp;client=ca-pub-1971793357249522&amp;adurl=http://www.uniquecoat.com/powder-feeders-wl.html"; 
+google_ad.visible_url = "www.uniquecoat.com"; 
+google_ad.log_info = "BYuLx4bCbU83TGM2muATk8YCIBACaqoj6nAEAABABOAHIAQGoE4AB";
+google_ad.activeview_js_immediate_enabled = "true";
+google_ad.line1 = "Weight Loss Powder Feeder"; 
+google_ad.line2 = "Digital weight loss powder feeders"; 
+google_ad.line3 = "for industrial applications."; 
+google_ad.regionname = ""; 
+google_ads[1] = google_ad; 
+google_ad = {}; 
+google_ad.n = 3; 
+google_ad.type = "text"; 
+google_ad.bidtype = "CPC"; 
+google_ad.targeting_type = "contextual"; 
+google_ad.url = "http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C2nqx4bCbU83TGM2muATk8YCIBOP_tqUFs8bXvpMBwI23ARADILGK9QEoA1CFl_nW_v____8BYDOgAaOllu0DyAEBqAMBqgSxAU_QfDE_gIuc-yFZP7hu3HsBS63VcM_VcDIlPDAK0MZWGobZ3HEgH7uNWZ71m8P4jSsyO7u0vPO3jZMyztS7nJ2JMiW7W0zj85YwV994OY_GxREqSj09ihNsQKPV7UWM6PoZEjE0VlVUrNM4bRFRNja3jg_6S86lCWLJ9wEokJX8YvrSVKFhJ6Wo5O_hSwhwDkHDCb1APSTXvXxYQ6QsRJbm6qQBPeOd02UZkY6cVAFfqogGAYAHxdrpEg&amp;num=3&amp;cid=5GgsZBXmE6IZeWE_aRWb7DFv&amp;sig=AOD64_1cV8uZGBkdLM9zAfHmkY0hi_1zGw&amp;client=ca-pub-1971793357249522&amp;adurl=http://www.robard.com/programs/for-medical-providers"; 
+google_ad.visible_url = "www.robard.com"; 
+google_ad.log_info = "BYuLx4bCbU83TGM2muATk8YCIBACaqoj6nAEAABABOAHIAQGoE4AB";
+google_ad.activeview_js_immediate_enabled = "true";
+google_ad.line1 = "Very Low Calorie Diets"; 
+google_ad.line2 = "Start a weight loss business \x26#8212;"; 
+google_ad.line3 = "Implement in 30 Days. Learn more!"; 
+google_ad.regionname = ""; 
+google_ads[2] = google_ad; 
+google_info.feedback_url = "https://www.google.com/url?ct\x3dabg\x26q\x3dhttps://www.google.com/adsense/support/bin/request.py%3Fcontact%3Dabg_afc%26url%3Dhttp://www.medicalnewstoday.com/info/obesity/how-much-should-i-weigh.php%26gl%3DBD%26hl%3Den%26client%3Dca-pub-1971793357249522%26ai0%3DCQNew4bCbU83TGM2muATk8YCIBNKVyKsFmqqI-pwBwI23ARABILGK9QEoA1C9_-Ho-v____8BYDPIAQGoAwGqBK4BT9BsdjWAiZz7IVk_uG7cewFLrdVwz9VwMiU8MArQxlYahtnccSAfu41ZnvWbw_iNKzI7u7S887eNkzLO1LucnYkyJbtbTOPzljBX33g5j8bFESpKPT2KE2xAo9XtRYzo-hkSMTRWVVSs0zhtEVE2NreOD_pLzqUJYsn3AWCQJrfNdK_-b4jMSoTk7-BLCP_lt2MKSEN50dT5iVtTUS9UY_XqURK9FphRhRlnlyaPgAfU18UT%26ai1%3DCm2xq4bCbU83TGM2muATk8YCIBP2L6osCpYTm_CnAjbcBEAIgsYr1ASgDUL7D9pIEYDPIAQGoAwGqBK4BT9AcFDiAipz7IVk_uG7cewFLrdVwz9VwMiU8MArQxlYahtnccSAfu41ZnvWbw_iNKzI7u7S887eNkzLO1LucnYkyJbtbTOPzljBX33g5j8bFESpKPT2KE2xAo9XtRYzo-hkSMTRWVVSs0zhtEVE2NreOD_pLzqUJYsn3AWCQWde0cq_-b4jMSoTk7-BLCP_lt2MKSEN50dT5iVtTUS9UY_XqURK9FphRhRlE9W6NgAe3yPUV%26ai2%3DC2nqx4bCbU83TGM2muATk8YCIBOP_tqUFs8bXvpMBwI23ARADILGK9QEoA1CFl_nW_v____8BYDOgAaOllu0DyAEBqAMBqgSxAU_QfDE_gIuc-yFZP7hu3HsBS63VcM_VcDIlPDAK0MZWGobZ3HEgH7uNWZ71m8P4jSsyO7u0vPO3jZMyztS7nJ2JMiW7W0zj85YwV994OY_GxREqSj09ihNsQKPV7UWM6PoZEjE0VlVUrNM4bRFRNja3jg_6S86lCWLJ9wEokJX8YvrSVKFhJ6Wo5O_hSwhwDkHDCb1APSTXvXxYQ6QsRJbm6qQBPeOd02UZkY6cVAFfqogGAYAHxdrpEg\x26usg\x3dAFQjCNEQuDYGEyhfrfiuAXq5Iw2Z9LmCIQ";
+var google_attribution_text = "AdChoices";
+var google_is_rtl = false;
+if (window.google_ad_request_done) {
+google_ad_request_done(google_ads);
+}
+if (window.google_radlink_request_done) {
+google_radlink_request_done(google_radlinks);
+}
+}

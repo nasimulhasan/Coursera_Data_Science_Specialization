@@ -1,0 +1,237 @@
+---
+title: "Training set: clean up"
+output: pdf_document
+---
+
+Training set Analysis
+================
+
+Load the dataset
+==================================
+
+```{r load, cache=TRUE, echo=TRUE}
+setwd("F:/Introduction to Data Science/Week5/Assessment/Kaggle_Higgs_Boson_Machine_Learning_Challenge")
+getwd()
+
+training <- read.csv("training.csv")
+```
+
+Analyze the structure of the data set
+===========================
+```{r size, cache=TRUE, echo=TRUE}
+dim(training)
+names(training)
+str(training)
+summary(training)
+print(object.size(training), units = "MB")
+```
+
+Plot the features
+================
+```{r plt, fig.height=9, fig.width=10, cache=TRUE, echo=TRUE}
+library(ggplot2)
+par(mfrow = c(34, 2))
+qplot(DER_mass_MMC, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(DER_mass_transverse_met_lep, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(DER_mass_vis, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(DER_pt_h, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(DER_deltaeta_jet_jet, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(DER_mass_jet_jet, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(DER_prodeta_jet_jet, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(DER_prodeta_jet_jet, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(DER_deltar_tau_lep, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(DER_pt_tot, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(DER_sum_pt, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(DER_pt_ratio_lep_tau, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(DER_met_phi_centrality, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(DER_lep_eta_centrality, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_tau_pt, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_tau_eta, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_tau_phi, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_lep_pt, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_lep_eta, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_lep_phi, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_met, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_met_phi, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_met_sumet, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_jet_num, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_jet_leading_pt, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_jet_leading_eta, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_jet_leading_phi, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_jet_subleading_pt, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_jet_subleading_eta, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_jet_subleading_phi, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_jet_all_pt, 
+       Weight, 
+       col = Label, 
+       data = training
+      )
+
+qplot(PRI_tau_pt, 
+      PRI_jet_all_pt, 
+      col = Label, 
+      data = training,
+      geom = c("point", "smooth")
+      )
+
+qplot(PRI_lep_pt, 
+      PRI_tau_pt, 
+      col = Label, 
+      data = training
+      )
+```
+
+
+
+
+

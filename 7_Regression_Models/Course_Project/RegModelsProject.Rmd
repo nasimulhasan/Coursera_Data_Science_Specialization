@@ -1,0 +1,81 @@
+---
+output: html_document
+---
+Analysis of mtcars data set
+========================================================
+
+Load the data set
+```{r}
+data(mtcars)
+mtcars0 <- mtcars[which(mtcars$am == 0), ]
+mtcars1 <- mtcars[which(mtcars$am != 0), ]
+plot(mtcars0$mpg); plot(mtcars1$mpg)
+```
+
+Exploratory analysis
+=====================
+```{r expo, cache=TRUE, echo=TRUE}
+#dimension of the data set
+dim(mtcars)
+
+#variables 
+names(mtcars)
+
+#plot 
+library(lattice)
+library(ggplot2)
+
+qplot(wt, mpg, data = mtcars, col = am)
+
+#mean of the mpg for automatic and manual transmission
+meanMPG <- tapply(mtcars$mpg, mtcars$am, mean)
+meanMPG
+
+manual <- 24.39231 
+automatic <- 17.14737
+
+meanDiff <- manual - automatic
+meanDiff
+
+#t test
+better <- t.test(mpg ~ am, data = mtcars)
+better
+```
+-Note: We can make a rough decision from the plot and meanDiff that miles per gallon (mpg) will inreases to 7.245 miles/gallon if transmission is passing from automatic (am = 0) to manual (am = 1)
+
+Model fitting
+==============
+```{r reg, cache=TRUE, echo=TRUE}
+model.wild <- lm(mpg ~ ., data = mtcars)
+summary(model.wild)
+
+
+model.fit1 <- lm(mpg ~ am, data = mtcars)
+summary(model.fit1)
+resid(model.fit1)
+
+res <- residuals(model.fit1)
+fitted <- fitted(model.fit1)
+res; fitted
+hist(fitted)
+hist(res)
+plot(fitted, res)
+confint.lm(model.fit1)
+confint(model.fit1)
+abline(h = 0, lty = 2)
+abline(plot(model.fit1), lwd = 2)
+#model selection using backward elimination
+backElim <- step(model.wild, , direction = "backward")
+backElim
+summary(backElim)$coef
+plot(backElim)
+
+model.fit <- lm(mpg ~ wt + qsec + am, data = mtcars)
+
+summary(model.fit)$coef
+```
+
+
+Results
+=======
+- Manual transmission is better than automatic transmission for MPG.
