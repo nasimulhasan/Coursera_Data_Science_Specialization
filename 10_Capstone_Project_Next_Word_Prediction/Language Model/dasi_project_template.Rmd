@@ -1,0 +1,384 @@
+---
+title: 'Capstone Project: Milestone Report'
+author: "Mohamed Taufeeq"
+date: "November 12, 2014"
+output:
+  html_document:
+    theme: cerulean
+---
+
+<!-- For more info on RMarkdown see http://rmarkdown.rstudio.com/ -->
+
+<!-- Enter the code required to load your data in the space below. The data will be loaded but the line of code won't show up in your write up (echo=FALSE) in order to save space-->
+```{r echo=FALSE, results='hide'}
+setwd("F:/Taufeeq/ML/Data Science/10. Capstone/Task0")
+getwd()
+```
+
+<!-- In the remainder of the document, add R code chunks as needed -->
+
+
+### Synopsis 
+
+The purpose of this milestone report is to explain the transformation of the raw data to tidy data including basic summary statistics, plotting, and n-gram. The source of the raw data is http://www.corpora.heliohost.org/ 
+
+
+```{r pkg, cache=TRUE, echo=FALSE, results='hide'}
+# required library
+library(NLP)
+library(tm)
+library(openNLP)
+library(qdap)
+library(stringr)
+library(SnowballC) # Provides wordStem() for stemming
+library(RWeka)
+library(RColorBrewer) # Generate palette of colours for plots
+library(ggplot2)
+library(stylo)
+library(topicmodels)
+library(wordcloud)
+```
+
+
+
+```{r radData, cache=TRUE, echo=FALSE}
+# load the origina data set for Requirement #1
+con <- file("F:/Taufeeq/ML/Data Science/10. Capstone/Dataset/final/en_US/en_US.news.txt", "rb")
+
+twitter <- readLines("F:/Taufeeq/ML/Data Science/10. Capstone/Dataset/final/en_US/en_US.twitter.txt", skipNul = TRUE)
+news <- readLines(con)
+blogs <- readLines("F:/Taufeeq/ML/Data Science/10. Capstone/Dataset/final/en_US/en_US.blogs.txt")
+
+File <- c("en_US_twitter", "en_US_news", "en_US_blogs")
+```
+
+
+### Exploratory data analysis
+
+#### Basic summary statistics
+
+There are three different data file such as en_US.blogs, en_US_news, en_US_twitter in the english language data folder. These three file contains of blog posts, news articles, and twitter tweets respectively. Basic summaries of these datasets are given below:
+
+```{r tab, cache=TRUE, echo=FALSE}
+# counting line
+line.count <- c(length(twitter),
+                length(news),
+                length(blogs)
+                )
+
+# counting word
+word.count <- c(length(txt.to.words(twitter)),
+                length(txt.to.words(news)),
+                length(txt.to.words(blogs))
+                )
+
+# Longest line
+longest.line <- c(max(nchar(twitter)),
+                  max(nchar(news)),
+                  max(nchar(blogs))
+                  )
+
+# create a data table 
+table <- data.frame(File_name = File, 
+                    Number_of_line = line.count, 
+                    Number_of_word = word.count,
+                    Longest_line = longest.line
+                    )
+table
+
+```
+
+#### Text corpus 
+
+In linguistics, a corpus (plural corpora) or text corpus is a large and structured set of texts. According to the requirement of the project, build a corpus of random sample of the three data set using available R package such as tm, Rweka, wordcloud, nlp, opennlp etc. Here is an example of content of the corpus data which contains several redundent charcters such as ???.
+
+```{r corpus, cache=TRUE, echo=FALSE, results='hide'}
+# load the corpus for Requirement #2
+# creating corpus using en-US documents
+corpus.name <- file.path("F:/Taufeeq/ML/Data Science/10. Capstone/Dataset",
+                         "final",
+                         "sample"
+                         )
+
+```
+
+
+```{r cor.data, cache=TRUE, echo=FALSE, results='hide'}
+# load the corpus
+docs <- Corpus(DirSource(corpus.name,
+                         encoding="UTF-8"),
+               readerControl = list(language = "en")
+               )
+
+summary(docs)
+str(docs)
+class(docs)
+```
+
+
+```{r cor.content, cache=TRUE, echo=FALSE}
+docs[[3]]$content[4:5]
+```
+
+#### Profinity filtering
+
+Profinity filtering is basically filter out non-essential data for prediction purposes. In this phase of the exploratory analysis, perform essential repalcement of the words, sentence detection, repalcement of the non-alpha numeric characters, removing numbers and punctuation, stripping white space, and stemming words. A sample of the profinity filtered data is given below.
+
+
+```{r token.prefine, cache=TRUE, echo=FALSE}
+abbr <- read.csv("abbr.csv")
+replacement <- function(x) {
+        replace.abbr <- content_transformer(function(x) replace_abbreviation(x, abbreviation = abbr))
+        corpus.tmp <- tm_map(docs, replace.abbr)
+}
+
+docs <- replacement(docs)
+# > x <- replacement(docs[[1]]$content[1])
+# > x[[1]]$content[1]
+# [1] "just so you know it, it was feb all worth it :d"
+# > docs[[1]]$content[1]
+# [1] "just so you know it, it was feb. all worth it. :d"
+
+
+# detecting sentence
+sentences <- function(x) {
+        to.space <- content_transformer(function(x) sent_detect(x))
+        corpus.tmp <- tm_map(docs, to.space)
+}
+
+docs <- sentences(docs)
+
+# n-gram tokenizer
+#
+# 2-gram
+ngram <- 1
+nGramTokenizer <- function(x) NGramTokenizer(x,
+                                             Weka_control(min = ngram,
+                                                          max = ngram,
+                                                          delimiters = " \\r\\n\\t.,;:\"()?!"
+                                                          )
+                                             )
+
+tokens <- nGramTokenizer(docs)
+
+# Profinity filtering
+bad.or.offensive <- readLines("bad_or_offensive_word_v1.txt")
+clean.corpus <- function(docs) {        
+        # special transformation
+        to.space <- content_transformer(function(x) str_replace_all(x, "[^[:alnum:]]", " "))
+        corpus.tmp <- tm_map(docs, to.space)  
+        
+        #corpus.tmp <- tm_map(corpus.tmp, to.space)
+        
+        # removing bad character
+        #corpus.tmp <- gsub('[])(;:#%$^*\\~{}[&+=@/"`|<>_]+"', " ", corpus.tmp)
+        
+        # removing punctuation
+        corpus.tmp <- tm_map(corpus.tmp, removePunctuation)
+        
+        # removeing the number
+        corpus.tmp <- tm_map(corpus.tmp, removeNumbers)
+        
+        # removing stop words
+        corpus.tmp <- tm_map(corpus.tmp, removeWords, bad.or.offensive)
+        
+        # striping whitespace
+        corpus.tmp <- tm_map(corpus.tmp, stripWhitespace)
+        
+        # stemming the documents
+        corpus.tmp <- tm_map(corpus.tmp, stemDocument)
+        
+        return (corpus.tmp)
+}
+
+```
+
+
+```{r profaned, cache=TRUE, echo=FALSE}
+clean.docs <- clean.corpus(docs)
+clean.docs[[3]]$content[7:12]
+```
+
+#### Tokenization
+
+In lexical analysis, tokenization is the process of breaking a stream of text up into words, phrases, symbols, or other meaningful elements called tokens. Here, filtered texts are broken into tokens using DocumentTermMatrix and nGramTokenizer function. A word cloud of the 1-gram tokenizer is provided below, and more details of n-gram tokenization is given in the very last section of the exploratory analysis.
+
+
+```{r dtm, cache=TRUE, echo=FALSE}
+# create document matrix
+ngram <- 1
+dtm.1 <- DocumentTermMatrix(clean.docs, 
+                            control = list(tokenize = nGramTokenizer)
+                            )
+
+frequency.dtm.1 <- sort(colSums(as.matrix(dtm.1)), decreasing = TRUE)
+# ---------------------------------------------------------
+ngram <- 2
+dtm.2 <- DocumentTermMatrix(clean.docs, 
+                          control = list(tokenize = nGramTokenizer)
+                          )
+
+frequency.dtm.2 <- sort(colSums(as.matrix(dtm.2)), decreasing = TRUE)
+
+# ------------------------------------------------------------
+ngram <- 3
+dtm.3 <- DocumentTermMatrix(clean.docs, 
+                            control = list(tokenize = nGramTokenizer)
+                            )
+
+frequency.dtm.3 <- sort(colSums(as.matrix(dtm.3)), decreasing = TRUE)
+
+
+df.frequent.gram <- data.frame(FTermIn1Gram = names(frequency.dtm.1[1:20]),
+                               Freq_1 = frequency.dtm.1[1:20],
+                               FTermIn2Gram = names(frequency.dtm.2[1:20]),
+                               Freq_2 = frequency.dtm.2[1:20],
+                               FTermIn3Gram = names(frequency.dtm.3[1:20]),
+                               Freq_3 = frequency.dtm.3[1:20])
+```
+
+
+```{r tkn, cache=TRUE, echo=FALSE}
+ plot.new()
+ set.seed(100)
+ #text(x = .5, y = .5, "Frequent term: 1-gram")
+ wordcloud(names(frequency.dtm.1), frequency.dtm.1, min.freq = 100, 
+           colors=brewer.pal(6, "Dark2"))
+
+
+```
+
+#### Term frequency
+
+Several words are more frequent than all other word in the text files. Below are the three different term frequency plots of the files. All of the three plots shows which words are more common than others. X-axis of the plot represents specific words in target file and Y-axis represent corresponding frequency of the words.
+
+```{r termFrequency, cache=TRUE, echo=FALSE, fig.height=3, fig.width=11}
+dtm.blog <- DocumentTermMatrix(clean.docs[1])
+#class(dtm.blog)
+#dim(dtm.blog)
+
+dtm.blog.v1 <- removeSparseTerms(dtm.blog, .5)
+#dim(dtm.blog.v1)
+
+blog.frequency <- sort(colSums(as.matrix(dtm.blog.v1)), decreasing = TRUE)
+#head(blog.frequency, 10)
+
+# create data frame of word and corresponding frequency
+blog.word.frequency <- data.frame(Word = names(blog.frequency), Frequency = blog.frequency)
+#head(blog.word.frequency)
+
+# plot the word frequency
+subset(blog.word.frequency, Frequency > 500)        %>%
+        ggplot(aes(Word, Frequency))            +
+        geom_bar(stat = "identity")             +
+        theme(axis.text.x=element_text(angle=45, hjust=1)) +
+        labs(x = "Mostly written word in blog posts",
+             y = "Word frequency",
+             title = "Word frequency plot of blog data")
+
+
+# ----------------------------------------------------
+dtm.news <- DocumentTermMatrix(clean.docs[2])
+#class(dtm.news)
+#dim(dtm.news)
+
+dtm.news.v1 <- removeSparseTerms(dtm.news, .5)
+#dim(dtm.news.v1)
+
+news.frequency <- sort(colSums(as.matrix(dtm.news.v1)), decreasing = TRUE)
+#head(news.frequency, 10)
+
+# create data frame of word and corresponding frequency
+news.word.frequency <- data.frame(Word = names(news.frequency), Frequency = news.frequency)
+#head(news.word.frequency)
+
+# plot the word frequency
+subset(news.word.frequency, Frequency > 500)        %>%
+        ggplot(aes(Word, Frequency))            +
+        geom_bar(stat = "identity")             +
+        theme(axis.text.x=element_text(angle=45, hjust=1)) +
+        labs(x = "Mostly written word in news articles",
+             y = "Word frequency",
+             title = "Word frequency plot of news data")
+
+
+# ----------------------------------------------------
+dtm.twitter <- DocumentTermMatrix(clean.docs[3])
+#class(dtm.blog)
+#dim(dtm.twitter)
+
+dtm.twitter.v1 <- removeSparseTerms(dtm.twitter, .5)
+#dim(dtm.twitter.v1)
+
+twitter.frequency <- sort(colSums(as.matrix(dtm.twitter.v1)), decreasing = TRUE)
+#head(blog.frequency, 10)
+
+# create data frame of word and corresponding frequency
+twitter.word.frequency <- data.frame(Word = names(twitter.frequency), Frequency = twitter.frequency)
+#head(twitter.word.frequency, 15)
+
+subset(twitter.word.frequency, Frequency > 200)        %>%
+        ggplot(aes(Word, Frequency))            +
+        geom_bar(stat = "identity")             +
+        theme(axis.text.x=element_text(angle=45, hjust=1)) +
+        labs(x = "Mostly written word in twitter tweets",
+             y = "Word frequency",
+             title = "Word frequency plot of twitter data")
+
+
+
+```
+
+
+From the three plots, it can say that 'the', 'and', 'you', 'for' etc. are very frequent.
+
+
+
+```{r tdm, cache=TRUE, echo=FALSE}
+# create document matrix
+ngram <- 1
+tdm.1 <- TermDocumentMatrix(clean.docs, 
+                            control = list(tokenize = nGramTokenizer)
+                            )
+
+df.tdm.1 <- as.data.frame(as.matrix(tdm.1))
+
+# ---------------------------------------------------------
+ngram <- 2
+tdm.2 <- TermDocumentMatrix(clean.docs, 
+                          control = list(tokenize = nGramTokenizer)
+                          )
+
+df.tdm.2 <- as.data.frame(as.matrix(tdm.2))
+
+# ------------------------------------------------------------
+ngram <- 3
+tdm.3 <- TermDocumentMatrix(clean.docs, 
+                            control = list(tokenize = nGramTokenizer)
+                            )
+
+df.tdm.3 <- as.data.frame(as.matrix(tdm.3))
+
+```
+
+#### Table of 1-gram, 2-gram, and 3-gram
+
+In the fields of computational linguistics and probability, an n-gram is a contiguous sequence of n items from a given sequence of text or speech. Here n = 1, 2, 3. Below is shown a table of 1-gram, 2-gram, and 3-gram term, and their respected frequencies in sample data.
+
+```{r word.cloud, cache=TRUE, echo=FALSE, fig.height=3, fig.width=11}
+
+df.frequent.gram
+
+```
+
+
+### Finding 
+
+- Twitter tweets contain a reasonable amount of non-alpha numeric characters and non-sense words
+
+- Some word are very common than others such as  'the', 'and', 'you', 'for', 'this', 'there', 'your', 'from', 'but', 'all' etc.
+
+
+### Conclusion
+
+This report covers a brief overview of the exploratory analysis of the data from taking the raw text data to building 1-gram, 2-gram, and 3-gram data for training the prediction model to predict the next unknown word.
